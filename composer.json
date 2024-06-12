@@ -1,0 +1,26 @@
+{
+  "name": "commission-calculator/commission-calculator",
+  "description": "A PHP application to calculate commissions",
+  "type": "project",
+  "require": {
+    "php": "^8.2",
+    "guzzlehttp/guzzle": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^9.6"
+  },
+  "scripts": {
+    "test": "phpunit --colors=always --testdox tests"
+  }
+}
