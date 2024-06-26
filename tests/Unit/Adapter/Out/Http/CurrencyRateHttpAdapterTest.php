@@ -5,15 +5,11 @@ namespace Tests\Unit\Adapter\Out\Http;
 use App\Domain\Entity\CurrencyRate;
 use App\Infrastructure\Adapter\Out\Http\CurrencyRateHttpAdapter;
 use App\Infrastructure\Http\HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 class CurrencyRateHttpAdapterTest extends TestCase
 {
-    /**
-     * @throws GuzzleException
-     */
     public function testGetCurrencyRate(): void
     {
         $clientMock = $this->createMock(HttpClient::class);

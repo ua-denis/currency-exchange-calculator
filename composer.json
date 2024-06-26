@@ -4,6 +4,8 @@
   "type": "project",
   "require": {
     "php": "^8.2",
+    "ext-memcached": "*",
+    "ext-zip": "*",
     "guzzlehttp/guzzle": "^7.0"
   },
   "autoload": {

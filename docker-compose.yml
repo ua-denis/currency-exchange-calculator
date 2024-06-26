@@ -1,0 +1,45 @@
+﻿version: '3.8'
+
+networks:
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge
+
+services:
+    fpm:
+        container_name: app_backend_commission_calculator_fpm
+        build:
+            dockerfile: docker/php82/fpm/Dockerfile
+            context: .
+        expose:
+            - 9000
+        volumes:
+            - ./:/var/www/backend-commission-calculator-app:cached
+            - ./docker/data/log:/var/log:cached
+            - ./docker/data/tmp:/tmp
+        networks:
+            - backend
+
+    memcache:
+        container_name: app_backend_commission_calculator_memcache
+        image: memcached:latest
+        ports:
+            - "11211:11211"
+        networks:
+            - backend
+
+    nginx:
+        container_name: app_backend_commission_calculator_nginx
+        image: nginx:latest
+        ports:
+            - "80:80"
+        depends_on:
+            - fpm
+        volumes:
+            - ./docker/nginx/config/:/etc/nginx/conf.d/
+            - ./:/var/www/backend-commission-calculator-app:cached
+            - ./docker/data/log:/var/log:cached
+        networks:
+            - backend
+            - frontend

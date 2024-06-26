@@ -4,8 +4,9 @@ namespace App\Infrastructure\Adapter\Out\Http;
 
 use App\Contract\Infrastructure\Adapter\Out\Http\BinInfoPort;
 use App\Domain\Entity\BinInfo;
+use App\Infrastructure\Cache\Cache;
+use App\Infrastructure\Helper\Helper;
 use App\Infrastructure\Http\HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use RuntimeException;
 
@@ -13,6 +14,7 @@ class BinInfoHttpAdapter implements BinInfoPort
 {
     private HttpClient $httpClient;
     private string $endpoint;
+    private string $cacheKey = 'bin_info_';
 
     public function __construct(HttpClient $httpClient, string $binInfoEndpoint)
     {
@@ -20,14 +22,14 @@ class BinInfoHttpAdapter implements BinInfoPort
         $this->endpoint = $binInfoEndpoint;
     }
 
-    /**
-     * @throws GuzzleException
-     */
     public function getBinInfo(string $bin): BinInfo
     {
+        $cacheKey = $this->cacheKey.$bin;
         try {
-            $response = $this->httpClient->get("{$this->endpoint}/{$bin}");
-            $data = json_decode($response->getBody()->getContents(), true);
+            $data = Cache::remember($cacheKey, Helper::config('cache_time'), function () use ($bin) {
+                $response = $this->httpClient->get("{$this->endpoint}/{$bin}");
+                return json_decode($response->getBody()->getContents(), true);
+            });
 
             if (isset($data['country']['alpha2'])) {
                 return new BinInfo($data['country']['alpha2']);

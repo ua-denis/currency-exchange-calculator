@@ -17,6 +17,8 @@
 
 1. Install dependencies using Composer:
    ```bash
+   docker-compose up -d
+   docker-compose exec fpm bash
    composer install
    ```
 
